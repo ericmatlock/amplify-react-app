@@ -3,23 +3,16 @@
 }
 
 .App-logo {
-  height: 40vmin;
+  height: 10vmin;
   pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
 }
 
 .App-header {
   background-color: #282c34;
-  min-height: 100vh;
+  min-height: 5vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   font-size: calc(10px + 2vmin);
   color: white;
 }
@@ -28,11 +21,68 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.loaderContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+}
+
+.songList {
+  display: flex;
+  flex-direction: column;
+}
+
+.songCard {
+  display: flex;
+  justify-content: space-around;
+  padding: 5px;
+}
+.playButtonColumn {
+  width: 10%;
+}
+.titleColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 30%;
+}
+
+.favoriteColumn {
+  width: 20%;
+}
+.songDescriptionColumn {
+  display: flex;
+  align-items: flex-start;
+  width: 40%;
+}
+.songTitle {
+  display: flex;
+  font-weight: bold;
+}
+
+.ourAudioPlayer {
+  display: flex;
+  justify-content: center;
+}
+
+.newSong {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+input::file-selector-button {
+  margin-left: 1rem;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+  padding: 0.5em;
+  background-color: #027d95;
+  border: none;
+  border-radius: 3px;
+  transition: background-color 0.5s ease;
+  cursor: pointer;
+}
+input::file-selector-button:hover {
+  background-color: #005566;
 }

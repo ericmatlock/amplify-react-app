@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "songAPI",
+    "serviceName": "AppSync",
+    "defaultAuthType": {
+      "mode": "API_KEY",
+      "expirationTime": 20,
+      "apiKeyExpirationDate": "2023-04-06T18:58:20.924Z",
+      "keyDescription": "song-app"
+    },
+    "additionalAuthTypes": [],
+    "conflictResolution": {}
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-amplifyreactapp-dev-125213-authRole",
+      "UnauthRoleArn": "arn:aws:iam::873148096769:role/amplify-amplifyreactapp-dev-125213-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::873148096769:role/amplify-amplifyreactapp-dev-125213-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-amplifyreactapp-dev-125213-deployment",
+      "UnauthRoleName": "amplify-amplifyreactapp-dev-125213-unauthRole",
+      "StackName": "amplify-amplifyreactapp-dev-125213",
+      "StackId": "arn:aws:cloudformation:us-west-2:873148096769:stack/amplify-amplifyreactapp-dev-125213/e89c3ae0-c41a-11ed-b9fa-02be1598d601",
+      "AmplifyAppId": "d2cupxvxqh3vqh"
+    },
+    "categories": {
+      "auth": {
+        "amplifyreactapp9d7b98a0": {}
+      },
+      "api": {
+        "songAPI": {}
+      },
+      "storage": {
+        "songStorage": {}
+      }
+    }
+  }
+}

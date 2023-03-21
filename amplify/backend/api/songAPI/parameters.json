@@ -1,0 +1,6 @@
+{
+  "AppSyncApiName": "songAPI",
+  "DynamoDBBillingMode": "PAY_PER_REQUEST",
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2023-03-17T18:58:26.594Z"
+}
