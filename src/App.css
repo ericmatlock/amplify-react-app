@@ -49,6 +49,7 @@
 }
 
 .favoriteColumn {
+  display: flex;
   width: 20%;
 }
 .songDescriptionColumn {

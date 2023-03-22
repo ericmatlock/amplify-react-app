@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ReactPlayer from "react-player";
 import "./App.css";
 import { listSongs } from "./graphql/queries";
-import { updateSong, createSong } from "./graphql/mutations";
+import { updateSong, createSong, deleteSong } from "./graphql/mutations";
 import { Amplify, API, graphqlOperation, Storage } from "aws-amplify";
 import { v4 as uuid } from "uuid";
 import Paper from "@mui/material/Paper";
@@ -12,6 +12,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import PauseIcon from "@mui/icons-material/Pause";
 import AddIcon from "@mui/icons-material/Add";
+import DeleteIcon from "@mui/icons-material/Delete";
 import PublishIcon from "@mui/icons-material/Publish";
 
 import awsExports from "./aws-exports";
@@ -58,6 +59,17 @@ function App() {
     }
   };
 
+  const removeSong = async (i) => {
+    try {
+      await API.graphql(
+        graphqlOperation(deleteSong, { input: { id: songs[i].id } })
+      );
+      fetchSongs();
+    } catch (error) {
+      console.log("error on removing song", error);
+    }
+  };
+
   const toggleSong = async (i) => {
     if (songPlaying === i) {
       setSongPlaying("");
@@ -90,7 +102,9 @@ function App() {
           {
             <header className="App-header">
               <h1>Hello, {user.attributes.name}!</h1>
-              <Button variation="primary" onClick={signOut}>Sign out</Button>
+              <Button variation="primary" onClick={signOut}>
+                Sign out
+              </Button>
             </header>
           }
           {loading ? (
@@ -102,7 +116,11 @@ function App() {
               {songs.length
                 ? songs.map((song, i) => {
                     return (
-                      <Paper variant="outlined" key={`song${i}`}>
+                      <Paper
+                        variant="outlined"
+                        key={`song${i}`}
+                        id={`song${i}`}
+                      >
                         <div className="songCard">
                           <div className="playButtonColumn">
                             <IconButton
@@ -127,10 +145,18 @@ function App() {
                             >
                               <FavoriteIcon />
                             </IconButton>
-                            {song.likes}
+                            <p>{song.likes}</p>
                           </div>
                           <div className="songDescriptionColumn">
                             {song.description}
+                          </div>
+                          <div className="deleteButtonColumn">
+                            <IconButton
+                              aria-label="delete"
+                              onClick={() => removeSong(i)}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
                           </div>
                         </div>
                         {songPlaying === i ? (
@@ -156,7 +182,11 @@ function App() {
                   }}
                 />
               ) : (
-                <IconButton sx={{width: 40, alignSelf: "center"}} onClick={() => setShowAddSong(true)}>
+                <IconButton
+                  sx={{ width: 40, alignSelf: "center" }}
+                  aria-label="add-song"
+                  onClick={() => setShowAddSong(true)}
+                >
                   <AddIcon />
                 </IconButton>
               )}
@@ -189,7 +219,7 @@ const AddSong = ({ onUpload }) => {
       title,
       description,
       owner,
-      filePath: key,
+      filePath: key || "",
       likes: 0,
     };
     await API.graphql(graphqlOperation(createSong, { input: createSongInput }));
@@ -200,14 +230,18 @@ const AddSong = ({ onUpload }) => {
   return (
     <div className="newSong">
       <TextField
+        required
         label="Title"
         value={songData.title}
         onChange={(e) => setSongData({ ...songData, title: e.target.value })}
+        data-cy="new-title"
       />
       <TextField
+        required
         label="Artist"
         value={songData.artist}
         onChange={(e) => setSongData({ ...songData, owner: e.target.value })}
+        data-cy="new-artist"
       />
       <TextField
         label="Description"
@@ -215,13 +249,18 @@ const AddSong = ({ onUpload }) => {
         onChange={(e) =>
           setSongData({ ...songData, description: e.target.value })
         }
+        data-cy="new-description"
       />
       <input
         type="file"
         accept="audio/mp3"
         onChange={(e) => setMp3Data(e.target.files[0])}
       />
-      <IconButton onClick={uploadSong}>
+      <IconButton
+        onClick={uploadSong}
+        aria-label="upload-song"
+        data-cy="upload-song"
+      >
         <PublishIcon />
       </IconButton>
     </div>
