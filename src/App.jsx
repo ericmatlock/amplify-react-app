@@ -176,6 +176,8 @@ function App() {
                 : null}
               {showAddSong ? (
                 <AddSong
+                  songs={songs}
+                  setSongs={setSongs}
                   onUpload={() => {
                     setShowAddSong(false);
                     fetchSongs();
@@ -200,14 +202,41 @@ function App() {
 
 export default App;
 
-const AddSong = ({ onUpload }) => {
-  const [songData, setSongData] = useState({});
-  console.log("🚀🚀 ~ file: App.jsx:151 ~ AddSong ~ songData:", songData);
+function AddSong({ onUpload, songs, setSongs }) {
+  const [songData, setSongData] = useState({
+    title: "",
+    description: "",
+    owner: "",
+    filePath: "",
+  });
   const [mp3Data, setMp3Data] = useState();
-  console.log("🚀🚀 ~ file: App.jsx:153 ~ AddSong ~ mp3Data:", mp3Data);
+  const [loading, setLoading] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+
+  useEffect(() => {
+    console.log("🚀🚀 ~ file: App.jsx:213 ~ useEffect ~ songData:", songData);
+    if (songData.title || songData.owner) {
+      setDisabled(false);
+    } else {
+      setDisabled(true);
+    }
+  }, [songData]);
 
   const uploadSong = async () => {
-    console.log("songData", songData);
+    setLoading(true);
+    try {
+      const newSongData = await API.graphql(
+        graphqlOperation(createSong, { input: songData })
+      );
+      const songList = [...songs];
+      songList.push(newSongData.data.createSong);
+      setSongData({});
+      setMp3Data("");
+      setSongs(songList);
+      setLoading(false);
+    } catch (error) {
+      console.log("error on uploading song", error);
+    }
     const { title, description, owner } = songData;
 
     const { key } = await Storage.put(`${uuid()}.mp3`, mp3Data, {
@@ -217,52 +246,56 @@ const AddSong = ({ onUpload }) => {
     const createSongInput = {
       id: uuid(),
       title,
-      description,
-      owner,
+      description: description || "",
+      owner: owner || "",
       filePath: key || "",
       likes: 0,
     };
     await API.graphql(graphqlOperation(createSong, { input: createSongInput }));
 
     onUpload();
+    setLoading(false);
   };
 
   return (
-    <div className="newSong">
-      <TextField
-        required
-        label="Title"
-        value={songData.title}
-        onChange={(e) => setSongData({ ...songData, title: e.target.value })}
-        data-cy="new-title"
-      />
-      <TextField
-        required
-        label="Artist"
-        value={songData.artist}
-        onChange={(e) => setSongData({ ...songData, owner: e.target.value })}
-        data-cy="new-artist"
-      />
-      <TextField
-        label="Description"
-        value={songData.description}
-        onChange={(e) =>
-          setSongData({ ...songData, description: e.target.value })
-        }
-        data-cy="new-description"
-      />
-      <input
-        type="file"
-        accept="audio/mp3"
-        onChange={(e) => setMp3Data(e.target.files[0])}
-      />
-      <IconButton
-        onClick={uploadSong}
-        aria-label="upload-song"
-        data-cy="upload-song"
-      >
-        <PublishIcon />
-      </IconButton>
-    </div>
+    <>
+      <div className="newSong">
+        <TextField
+          required
+          label="Title"
+          value={songData.title}
+          onChange={(e) => setSongData({ ...songData, title: e.target.value })}
+          data-cy="new-title"
+        />
+        <TextField
+          label="Artist"
+          value={songData.artist}
+          onChange={(e) => setSongData({ ...songData, owner: e.target.value })}
+          data-cy="new-artist"
+        />
+        <TextField
+          label="Description"
+          value={songData.description}
+          onChange={(e) =>
+            setSongData({ ...songData, description: e.target.value })
+          }
+          data-cy="new-description"
+        />
+        <input
+          type="file"
+          accept="audio/mp3"
+          onChange={(e) => setMp3Data(e.target.files[0])}
+        />
+        <IconButton
+          disabled={disabled}
+          onClick={uploadSong}
+          aria-label="upload-song"
+          data-cy="upload-song"
+        >
+          <PublishIcon />
+        </IconButton>
+      </div>
+      {loading ? <Loader variation="linear" /> : null}
+    </>
   );
-};
+}
