@@ -58,7 +58,7 @@ describe("amplify song app", () => {
       cy.get("#song0").find(".favoriteColumn").contains("p", String(n + 1))
     })
   })
-  it("should be able to add and delete songs to the list", () => {
+  it("should be able to add and delete songs in the list", () => {
     cy.get("button[aria-label=add-song]").should("be.visible");
     cy.get(".newSong").should("not.exist");
     cy.get("button[aria-label=add-song]").click();
@@ -66,8 +66,9 @@ describe("amplify song app", () => {
     cy.get(".newSong").find("div[data-cy=new-artist]").should("be.visible");
     cy.get(".newSong").find("div[data-cy=new-description]").should("be.visible");
     cy.get(".newSong").find("input[type=file]").should("be.visible");
-    cy.get(".newSong").find("button[data-cy=upload-song]").should("be.visible");
+    cy.get(".newSong").find("button[data-cy=upload-song]").should("be.visible").should("have.attr", "disabled");
     cy.get(".newSong").find("div[data-cy=new-title]").find("input[type=text]").type("Diggin' On a Groove");
+    cy.get(".newSong").find("button[data-cy=upload-song]").should("be.visible").should("not.have.attr", "disabled");
     cy.get(".newSong").find("div[data-cy=new-artist]").find("input[type=text]").type("Jelly Bread");
     cy.get(".newSong").find("div[data-cy=new-description]").find("input[type=text]").type("From the Lessons Learned album")
     cy.get(".newSong").find("button[data-cy=upload-song]").click();
